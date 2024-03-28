@@ -129,6 +129,7 @@ fileprivate class PagedCollectionViewCoordinator<Content: View, Item: Identifiab
         cell.contentView.subviews.forEach { $0.removeFromSuperview() }
         cell.contentView.addSubview(child.view)
         cell.view = child.view
+        cell.view?.backgroundColor = .clear
         return cell
     }
     
@@ -182,6 +183,7 @@ fileprivate class HCollectionInner: UICollectionView {
         self.decelerationRate = .fast
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
+        self.backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {
