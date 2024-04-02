@@ -165,7 +165,10 @@ fileprivate class PagedCollectionViewCoordinator<Content: View, Item: Identifiab
             targetContentOffset.pointee.y = (CGFloat(page) * view.itemSize.height)
         }
         currentPage = page
-        view.selected.wrappedValue = page > -1 && page < view.items.count ? view.items[page] : nil
+        let new = page > -1 && page < view.items.count ? view.items[page] : nil
+        if view.selected.wrappedValue?.id != new?.id {
+            view.selected.wrappedValue = new
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
