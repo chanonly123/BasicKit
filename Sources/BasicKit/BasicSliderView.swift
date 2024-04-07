@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BasicSliderView: View {
+public struct BasicSliderView: View {
     @Binding private var value: Double
     @State private var lastValue: Double?
     
@@ -17,13 +17,13 @@ struct BasicSliderView: View {
     private var horizontal: Bool { axis == .horizontal }
     private var middle = false
     
-    init(_ value: Binding<Double>, axis: Axis.Set = .horizontal) {
+    public init(_ value: Binding<Double>, axis: Axis.Set = .horizontal) {
         self.axis = axis
         self._value = value
         self.lastValue = lastValue
     }
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { gr in
             ZStack {
                 Rectangle()
