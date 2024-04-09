@@ -8,13 +8,13 @@ struct User: Codable, Equatable {
 
 final class BasicKitTests: XCTestCase {
     
-    @SomeDefault(key: "username")
+    @SomeDefault("username")
     var username: String?
     
-    @SomeDefault(key: "user")
+    @SomeDefault("user")
     var user: User?
     
-    @SomeDefault(key: "int")
+    @SomeDefault("int")
     var int: Int?
     
     func testSomeDefaults() throws {

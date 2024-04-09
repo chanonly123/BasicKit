@@ -6,8 +6,14 @@ fileprivate let decoder = JSONDecoder()
 @propertyWrapper
 public struct SomeDefault<Value: Codable> {
     let key: String
-    var defaultValue: Value? = nil
-    var container: UserDefaults = .standard
+    let defaultValue: Value?
+    let container: UserDefaults
+    
+    init(_ key: String, defaultValue: Value? = nil, container: UserDefaults = .standard) {
+        self.key = key
+        self.defaultValue = defaultValue
+        self.container = container
+    }
     
     public var wrappedValue: Value? {
         get {
