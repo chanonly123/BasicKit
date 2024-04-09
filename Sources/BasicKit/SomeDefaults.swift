@@ -9,7 +9,7 @@ public struct SomeDefault<Value: Codable> {
     let defaultValue: Value?
     let container: UserDefaults
     
-    init(_ key: String, defaultValue: Value? = nil, container: UserDefaults = .standard) {
+    public init(_ key: String, defaultValue: Value? = nil, container: UserDefaults = .standard) {
         self.key = key
         self.defaultValue = defaultValue
         self.container = container
