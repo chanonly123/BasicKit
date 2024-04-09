@@ -1,45 +1,32 @@
 import Foundation
 
-fileprivate let tag = "Defaults:"
+fileprivate let encoder = JSONEncoder()
+fileprivate let decoder = JSONDecoder()
 
-public class SomeDefaults {
-    private static let jsonDecoder = JSONDecoder()
-    private static let jsonEncoder = JSONEncoder()
+@propertyWrapper
+public struct SomeDefault<Value: Codable> {
+    let key: String
+    var defaultValue: Value? = nil
+    var container: UserDefaults = .standard
     
-    private let userDefaults: UserDefaults
-    
-    public init(_ userDefaults: UserDefaults = UserDefaults.standard) {
-        self.userDefaults = userDefaults
-    }
-    
-    public subscript<T: Codable>(index: SomeDefaultsKey<T>) -> T? {
+    public var wrappedValue: Value? {
         get {
-            if let data = userDefaults.data(forKey: index.key) {
+            if let data = container.data(forKey: key) {
                 do {
-                    return try SomeDefaults.jsonDecoder.decode(T.self, from: data)
-                } catch let err {
-                    print(tag, err.localizedDescription)
+                    return try decoder.decode(Value.self, from: data)
+                } catch {
+                    print("SomeDefault:", error)
                 }
             }
-            return index.defaultVal
+            return nil
         }
-        set(newValue) {
+        set {
             do {
-                let data = try SomeDefaults.jsonEncoder.encode(newValue)
-                userDefaults.set(data, forKey: index.key)
-            } catch let err {
-                print(tag, err.localizedDescription)
+                let data = try encoder.encode(newValue)
+                container.set(data, forKey: key)
+            } catch {
+                print("SomeDefault:", error)
             }
         }
-    }
-}
-
-public struct SomeDefaultsKey<T: Codable> {
-    let defaultVal: T?
-    let key: String
-    
-    public init(_ key: String, defaultVal: T?) {
-        self.key = key
-        self.defaultVal = defaultVal
     }
 }
