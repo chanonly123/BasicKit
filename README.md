@@ -22,18 +22,48 @@
 
 ```
 // CustomType must conform to Codable
-extension SomeDefaultsKey {
-    static var user: SomeDefaultsKey<User> { SomeDefaultsKey<User>("user", defaultVal: nil) }
-    static var array: SomeDefaultsKey<[Int]> { SomeDefaultsKey<[Int]>("array", defaultVal: nil) }
-    static var value: SomeDefaultsKey<Int> { SomeDefaultsKey<Int>("value", defaultVal: nil) }
+
+struct YourStruct {
+    @SomeDefault("username", defaultValue: nil, container: UserDefaults.standard)
+    var username: String?
+
+    @SomeDefault("user")
+    var user: User?
 }
-defaults[.user] = user
-defaults[.value] = 10
-defaults[.array] = [1,2,3,4,5]
+
+let def = YourStruct()
+
+def.username = "abcde"
+def.user = // some object
+
 ```
 
 ## SomeURLRequest
 
 ```
+public struct LoginRepoService: AuthRepo {
+    let api = SomeURLRequest(interceptor: nil)
+        
+    public func login(token: String) async throws -> LoginData {
+        let (obj, res): (LoginResponseRoot, HTTPURLResponse) = try await api.send(url: Endpoints.login, body: ["token": token], method: .post)
+        return obj.data
+    }
+}
 
+// optional interceptor
+class URLRequestInterceptorImpl: SomeURLRequestInterceptor {
+    private let local: MeloDefaults = injector.inject()
+    
+    func updateResponse(_ args: (data: Data, response: HTTPURLResponse)) async throws -> (data: Data, response: HTTPURLResponse) {
+        // copy, modify and return the modified response
+    }
+    
+    func onRequest(_ request: inout URLRequest) async throws {
+        // update the request just before the api call 
+        guard let accessToken = local.accessToken else {
+            throw MeloError.authMissing
+        }
+        request.setValue(accessToken, forHTTPHeaderField: "x-auth-token")
+    }
+}
 ```
