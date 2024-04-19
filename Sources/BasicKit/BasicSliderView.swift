@@ -16,8 +16,10 @@ public struct BasicSliderView: View {
     private let axis: Axis.Set
     private var horizontal: Bool { axis == .horizontal }
     private var middle = false
+    let onEditingChanged: ((Bool)->Void)?
     
-    public init(_ value: Binding<Double>, axis: Axis.Set = .horizontal) {
+    public init(_ value: Binding<Double>, axis: Axis.Set = .horizontal, onEditingChanged: ((Bool)->Void)? = nil) {
+        self.onEditingChanged = onEditingChanged
         self.axis = axis
         self._value = value
         self.lastValue = lastValue
@@ -73,11 +75,13 @@ public struct BasicSliderView: View {
                                 self.value = max(middle ? -1 : 0, min(1, value))
                             }
                         } else {
+                            onEditingChanged?(true)
                             lastValue = value
                         }
                     }
                     .onEnded({ v in
                         lastValue = nil
+                        onEditingChanged?(false)
                     })
             )
         }
@@ -108,7 +112,9 @@ fileprivate struct SliderViewPreview: View {
         
         HStack {
             ZStack {
-                BasicSliderView($progress, axis: .vertical)
+                BasicSliderView($progress, axis: .vertical, onEditingChanged: { editing in
+                    print("editing", editing)
+                })
                     .backColor(.gray)
                     .fillColor(.red)
                     .frame(width: 50, height: 300)

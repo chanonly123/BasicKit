@@ -1,4 +1,4 @@
-# BasicKit for iOS project
+# BasicKit for iOS projects
 
 
 ## PagedCollectionView
