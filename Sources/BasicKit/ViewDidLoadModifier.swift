@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ViewDidLoadModifier: ViewModifier {
-    @State private var didLoad = false
+    @Binding private var didLoad: Bool
     private let action: (() -> Void)
     
-    init(action: (@escaping () -> Void)) {
+    init(didLoad: Binding<Bool>, action: (@escaping () -> Void)) {
+        self._didLoad = didLoad
         self.action = action
     }
     
@@ -26,7 +27,7 @@ struct ViewDidLoadModifier: ViewModifier {
 }
 
 public extension View {
-    func onViewDidLoad(perform action: @escaping (()->Void)) -> some View {
-        modifier(ViewDidLoadModifier(action: action))
+    func onViewDidLoad(didLoad: Binding<Bool>, perform action: @escaping (()->Void)) -> some View {
+        modifier(ViewDidLoadModifier(didLoad: didLoad, action: action))
     }
 }
