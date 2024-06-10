@@ -7,20 +7,26 @@
 
 import SwiftUI
 
-public struct ViewDidLoadModifier: ViewModifier {
+struct ViewDidLoadModifier: ViewModifier {
     @State private var didLoad = false
     private let action: (() -> Void)
     
-    public init(action: (@escaping () -> Void)) {
+    init(action: (@escaping () -> Void)) {
         self.action = action
     }
     
-    public func body(content: Content) -> some View {
+    func body(content: Content) -> some View {
         content.onAppear {
             if didLoad {
                 didLoad = true
                 action()
             }
         }
+    }
+}
+
+public extension View {
+    func onViewDidLoad(perform action: @escaping (()->Void)) -> some View {
+        modifier(ViewDidLoadModifier(action: action))
     }
 }
